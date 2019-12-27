@@ -1,29 +1,17 @@
 // ==UserScript==
-// @name         New Userscript
+// @name         gold
 // @namespace    http://tampermonkey.net/
 // @version      0.1
 // @description  try to take over the world!
 // @author       You
-// @match        http://*/*
+// @require      https://momentjs.com/downloads/moment.min.js
+// @match        http://gold/attendance*
 // @grant        none
 // ==/UserScript==
 
 (function() {
     'use strict';
-    function loadScript(url) {
-        return new Promise((resolve, reject) => {
-            var element = document.createElement('script');
-            element.setAttribute('type', 'text/javascript');
-            element.setAttribute('src', url);
-            element.onload = () => {
-                resolve();
-            };
-            element.onerror = () => {
-                reject(new Error(`Unable to load ${url}`));
-            };
-            document.head.appendChild(element);
-        });
-    }
+
     var createTag = function(tagName, attr) {
         var result = document.createElement(tagName);
         Object.keys(attr).forEach((key) => {
@@ -31,9 +19,7 @@
         });
         return result;
     };
-
-     loadScript('https://momentjs.com/downloads/moment.min.js').then(function() {
-         var weekData = [];
+    var weekData = [];
          [...document.querySelectorAll('tr.Text0')].forEach(tr => {
              var startTime = moment(tr.cells[1].innerText);
              var endTime = moment(tr.cells[2].innerText);
@@ -62,5 +48,4 @@
              }))
          })
 
-     });
 })();
