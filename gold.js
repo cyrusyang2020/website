@@ -1,3 +1,13 @@
+// ==UserScript==
+// @name         New Userscript
+// @namespace    http://tampermonkey.net/
+// @version      0.1
+// @description  try to take over the world!
+// @author       You
+// @match        http://*/*
+// @grant        none
+// ==/UserScript==
+
 (function() {
     'use strict';
     function loadScript(url) {
@@ -37,7 +47,7 @@
                      var h = 0;
                      var m = 0;
                      weekData.forEach(w=> {
-                         h += w.get('hours');
+                         h += w.get('hours') - 1;
                          m += w.get('minutes');
                      });
                      h += m / 60;
