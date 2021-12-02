@@ -4,6 +4,9 @@
         <meta charset="UTF-8" />
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
         <style>
+            span {
+                background: #ddd;
+            }
             span[data-seismic-variable] {
                 background: #ccc;
             }
@@ -15,7 +18,12 @@
     </head>
     <body class="demo-namespace">
         <div id="main" style="height:300px" contenteditable="true">
-            123123 <span data-seismic-variable>variable</span>asdasdasd<span data-seismic-variable>variable</span>
+            hell<span>oooo</span>ll 123123
+            <span data-seismic-variable data-text="variable">variable</span>asdasdasd<span
+                data-seismic-variable
+                data-text="variable"
+                >variable</span
+            >
         </div>
         <script>
             const DocumentPosition = {
@@ -59,7 +67,7 @@
 
             document.addEventListener("selectionchange", event => {
                 const selection = document.getSelection();
-                //  console.error('selection', selection);
+                console.error("selection", selection);
 
                 if (selection?.isCollapsed) return;
 
@@ -101,7 +109,7 @@
                         }
                         return "insert";
                     default:
-                        return event.key.length === 1 ? "insert" : "ignore";
+                        return event.key.length === 1 || event.key === "Process" ? "insert" : "ignore";
                 }
             }
 
@@ -110,10 +118,19 @@
 
                 if (type === "ignore") return;
                 const selection = document.getSelection();
-                if (!selection.isCollapsed) return;
+                const start = getVariable(selection.anchorNode);
                 const end = getVariable(selection.focusNode);
-                if (type === 'delete') {
-                   end.remove();
+                if (!selection.isCollapsed) {
+                    if (type !== "insert") return;
+
+                    if (start) start.remove();
+                    if (end) end.remove();
+
+                    return;
+                }
+
+                if (type === "delete" && end) {
+                    end.remove();
                 }
 
                 if (type === "insert") {
@@ -131,6 +148,31 @@
                         selection.setPosition(text, 1);
                     }
                 }
+            });
+
+            document.getElementById("main").addEventListener("keyup", event => {
+                const type = executeType(event);
+                if (type !== "delete") return;
+
+                const selection = document.getSelection();
+                console.error('selection.focusNode.nodeValue', selection.focusNode.nodeValue)
+                if (selection.focusNode.nodeName === "#text" && selection.focusNode.nodeValue === "\u200B") {
+                    selection.focusNode.remove();
+                }
+                if (!selection.isCollapsed) return;
+                // const end = getVariable(selection.focusNode);
+                // if (end) {
+                //     end.remove();
+                // }
+                // console.error('selection.focusNode', selection.focusNode);
+                document
+                    .getElementById("main")
+                    .querySelectorAll("span[data-seismic-variable]")
+                    .forEach(element => {
+                        if (element.dataset["text"] !== element.innerText) {
+                            element.remove();
+                        }
+                    });
             });
         </script>
     </body>
