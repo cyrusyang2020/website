@@ -17,14 +17,7 @@
         </style>
     </head>
     <body class="demo-namespace">
-        <div id="main" style="height:300px" contenteditable="true">
-            hell<span>oooo</span>ll 123123
-            <span data-seismic-variable data-text="variable">variable</span>asdasdasd<span
-                data-seismic-variable
-                data-text="variable"
-                >variable</span
-            >
-        </div>
+        <div id="main" style="height:300px" contenteditable="true">To make your document look professionally produced,<span data-seismic-variable data-text="variable">variable</span> Word provides header, footer, cover page, and text box designs that complement each other. For example, you can add a matching cover page, header, and sidebar. Click Insert and then choose the elements you want from the different galleries.<span data-seismic-variable data-text="variable">variable</span></div>
         <script>
             const DocumentPosition = {
                 /**
@@ -103,13 +96,15 @@
                     case "Backspace":
                     case "Delete":
                         return "delete";
-                    case "c":
-                        if (event.ctrlKey) {
-                            return "ignore";
-                        }
                         return "insert";
                     default:
-                        return event.key.length === 1 || event.key === "Process" ? "insert" : "ignore";
+                        if (event.key.length === 1 || event.key === "Process"){
+                            if (event.ctrlKey) {
+                                return event.key === 'v' ? 'insert' : 'ignore';
+                            }
+                            return 'insert';
+                        }
+                        return "ignore"
                 }
             }
 
